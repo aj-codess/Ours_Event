@@ -1,0 +1,25 @@
+{
+  "name": "Ours Event",
+  "version": "1.0.0",
+  "description": "Platform for users to upload and collaborate on albums",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "aj",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "generate-unique-id": "^2.0.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.14.1",
+    "node-webhooks": "^1.4.2",
+    "nodemon": "^3.1.10"
+  }
+}
