@@ -7,8 +7,7 @@ import authRouter from "./middleware/userAuth.js";
 import logRouter from "./router/logRouter.js";
 import userRouter from "./router/userRouter.js";
 import eventRouter from "./router/eventRouter.js";
-import dbConnector from "./config/db_connector.js";
-import eventFeedRouter from "./router/eventFeedRouter.js";
+import db from "./config/db.js";
 import metricsRouter from "./router/metrics.js";
 import logServices from "./services/logServices.js";
 
@@ -16,7 +15,7 @@ const app = express();
 logServices.writePrivatePublic();
 logServices.loadPersistentKeys();
 dotenv.config();
-dbConnector.connectDB();
+db.connect();
 
 const PORT = process.env.PORT || 3000;
 
@@ -25,8 +24,8 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
-app.use("/",authRouter);
 app.use("/login",logRouter);
+app.use("/",authRouter);
 app.use("/user",userRouter);
 app.use("/event",eventRouter);
 app.use("/eventFeed",eventFeedRouter);
@@ -40,3 +39,39 @@ const server=app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 
 });
+
+
+server.on("upgrade",async(req,socket,head)=>{
+
+        const res = {
+            status: (code) => ({
+            json: (message) => {
+                socket.write(`HTTP/1.1 ${code} ${message.message}\r\n\r\n`);
+                socket.destroy();
+                },
+            }),
+        }; 
+
+
+        const runMiddleware=(req,res)=>{
+            return new Promise((resolve, reject) => {
+                auth_router.handle(req, res, (err) => {
+                if (err) return reject(err);
+                    resolve();
+                });
+            });
+        };
+
+    try{
+
+        await runMiddleware(req,res);
+
+
+    } catch(error){
+        socket.write(`HTTP/1.1 403 Forbidden\r\n\r\n`);
+        
+        socket.destroy();
+
+        console.log("Error With Websocket - ",error);
+    }
+})
