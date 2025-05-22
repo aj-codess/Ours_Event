@@ -7,3 +7,8 @@ const getMetrics=async(req,res)=>{
         console.log("Error Getting Metrics for Server - ",error);
     }
 }
+
+
+export default {
+    getMetrics
+}

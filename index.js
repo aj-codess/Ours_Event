@@ -8,14 +8,21 @@ import logRouter from "./router/logRouter.js";
 import userRouter from "./router/userRouter.js";
 import eventRouter from "./router/eventRouter.js";
 import db from "./config/db.js";
+import db2 from "./config/db2.js";
 import metricsRouter from "./router/metrics.js";
 import logServices from "./services/logServices.js";
+
+import chatSocketModel from "./socketHandlers/chatSocketModel.js";
+import eventSocketModel from "./socketHandlers/eventSocketModel.js";
+import searchSocketModel from "./socketHandlers/searchSocketModel.js";
+import userSearchSocketModel from "./socketHandlers/userSearchSocketModel.js";
 
 const app = express();
 logServices.writePrivatePublic();
 logServices.loadPersistentKeys();
 dotenv.config();
 db.connect();
+db2.connectDb();
 
 const PORT = process.env.PORT || 3000;
 
@@ -73,17 +80,29 @@ server.on("upgrade",async(req,socket,head)=>{
 
         if(url.includes("/eventFeeds")){
 
-            
+            eventSocketModel.handleUpgrade(req,socket,head,(socket_addr)=>{
+                eventSocketModel.emit("connection",socket_addr,req);
+            });
 
-        } else if(url.includes("/searchEvent")){
+        } else if(url.includes("/eventSearch")){
 
-
+            searchSocketModel.handleUpgrade(req,socket,head,(socket_addr)=>{
+                searchSocketModel.emit("connection",socket_addr,req);
+            })
 
         } else if(url.includes("/userChat")){
 
-            
+            chatSocketModel.handleUpgrade(req,socket,head,(socket_addr)=>{
+                chatSocketModel.emit("connection",socket_addr,req);
+            });
 
-        }
+        } else if(url.includes("/userSearch")){
+
+            userSearchSocketModel.handleUpgrade(req,socket,head,(socket_addr)=>{
+                userSearchSocketModel.emit("connection",socket_addr,req);
+            });
+
+        };
 
     } catch(error){
         socket.write(`HTTP/1.1 403 Forbidden\r\n\r\n`);
