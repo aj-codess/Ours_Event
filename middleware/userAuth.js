@@ -25,7 +25,6 @@ authRouter.use(async (req, res, next) => {
 
             if(decoded){
                 req.user = decoded.id;
-                console.log("Passed Authentication");
                 return next();
             };
 

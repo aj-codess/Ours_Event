@@ -28,7 +28,6 @@ app.use("/login",logRouter);
 app.use("/",authRouter);
 app.use("/user",userRouter);
 app.use("/event",eventRouter);
-app.use("/eventFeed",eventFeedRouter);
 app.use("/metrics",metricsRouter);
 app.use((req, res, next) => {
     res.status(404).json({ message: "Route not found" });
@@ -66,6 +65,25 @@ server.on("upgrade",async(req,socket,head)=>{
 
         await runMiddleware(req,res);
 
+         if (!req.user) {
+            socket.write(`HTTP/1.1 403 Forbidden\r\n\r\n`);
+            socket.destroy();
+            return;
+        };
+
+        if(url.includes("/eventFeeds")){
+
+            
+
+        } else if(url.includes("/searchEvent")){
+
+
+
+        } else if(url.includes("/userChat")){
+
+            
+
+        }
 
     } catch(error){
         socket.write(`HTTP/1.1 403 Forbidden\r\n\r\n`);
