@@ -8,7 +8,7 @@ import logRouter from "./router/logRouter.js";
 import userRouter from "./router/userRouter.js";
 import eventRouter from "./router/eventRouter.js";
 import db from "./config/db.js";
-import db2 from "./config/db2.js";
+import connectDB from "./config/db2.js";
 import metricsRouter from "./router/metrics.js";
 import logServices from "./services/logServices.js";
 
@@ -22,7 +22,7 @@ logServices.writePrivatePublic();
 logServices.loadPersistentKeys();
 dotenv.config();
 db.connect();
-db2.connectDb();
+connectDB();
 
 const PORT = process.env.PORT || 3000;
 

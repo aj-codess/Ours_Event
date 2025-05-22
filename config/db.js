@@ -47,7 +47,7 @@ const connect = async () => {
       );
     `);
 
-    console.log("✅ Tables initialized");
+    console.log("Tables initialized");
 
     client.on('error', (error) => {
       console.log("Error Occurred In the db - ", error);
