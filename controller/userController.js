@@ -1,6 +1,9 @@
+import userModel from "./../models/userModel.js";
 
 const getUserProfile=async(req,res)=>{
     try{
+
+        const obj=await userModel.getUserProfile(req.user);
 
     } catch(error){
         res.status(500).json({message:"internal Server Error in getting User Profile"});
@@ -49,6 +52,7 @@ const removeUser=async(req,res)=>{
 };
 
 
+//gets both friends and friends in the request pool
 const getAmigo=async(req,res)=>{
     try{
 

@@ -16,13 +16,15 @@ const connect = async () => {
 
     await client.query(`
         CREATE TABLE IF NOT EXISTS users (
-            userId SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        `);
+        userId SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        friends INTEGER[] DEFAULT '{}',
+        requests INTEGER[] DEFAULT '{}'
+      );
+    `);
 
 
     await client.query(`
