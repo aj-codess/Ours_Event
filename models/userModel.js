@@ -58,8 +58,8 @@ const deleteAccount=async(userId,password)=>{
         const hashedPassword=result.rows[0].password;
 
         const isMatch = await bcrypt.compare(password, hashedPassword);
-            if (!isMatch) {
-            throw new Error("Incorrect password");
+        if (!isMatch) {
+            return {status:false,message:"Password Doesnt Match"};
         }
 
         const deleteResult = await db.client.query(
@@ -132,8 +132,8 @@ const getFriendsNRequests=async(userId)=>{
         );
 
         if (result.rowCount === 0) {
-            throw new Error("User not found");
-        }
+            return res.status(404).json({status:false,message:"User Not Found"});
+        };
 
         return result.rows[0];
 
