@@ -13,6 +13,7 @@ const getUserProfile=async(userId)=>{
 
     } catch(error){
         console.log("Error Getting User From DB - ",error);
+        throw error;
     }
 };
 
