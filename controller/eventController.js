@@ -1,4 +1,4 @@
-
+import eventModel from "../models/eventModel.js";
 
 const createEvent=async(req,res)=>{
     try{

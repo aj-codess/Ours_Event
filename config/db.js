@@ -37,14 +37,14 @@ const connect = async () => {
 
     await client.query(`
       CREATE TABLE IF NOT EXISTS events (
-        event_id SERIAL PRIMARY KEY,
+        eventId SERIAL PRIMARY KEY,
         title TEXT NOT NULL,
         description TEXT,
-        location_name TEXT NOT NULL,
+        locationName TEXT NOT NULL,
         latitude DOUBLE PRECISION NOT NULL,
         longitude DOUBLE PRECISION NOT NULL,
-        start_time TIMESTAMP NOT NULL,
-        end_time TIMESTAMP NOT NULL,
+        startTime TIMESTAMP NOT NULL,
+        endTime TIMESTAMP NOT NULL,
         category_id INTEGER REFERENCES categories(category_id) ON DELETE SET NULL
       );
     `);
