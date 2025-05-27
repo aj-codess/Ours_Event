@@ -35,19 +35,22 @@ const connect = async () => {
     `);
 
 
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS events (
-        eventId SERIAL PRIMARY KEY,
-        title TEXT NOT NULL,
-        description TEXT,
-        locationName TEXT NOT NULL,
-        latitude DOUBLE PRECISION NOT NULL,
-        longitude DOUBLE PRECISION NOT NULL,
-        startTime TIMESTAMP NOT NULL,
-        endTime TIMESTAMP NOT NULL,
-        category_id INTEGER REFERENCES categories(category_id) ON DELETE SET NULL
-      );
-    `);
+await client.query(`
+  CREATE TABLE IF NOT EXISTS events (
+    eventId SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    description TEXT,
+    locationName TEXT NOT NULL,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    startTime TIMESTAMP NOT NULL,
+    endTime TIMESTAMP NOT NULL,
+    category_id INTEGER REFERENCES categories(category_id) ON DELETE SET NULL,
+    isOpen BOOLEAN DEFAULT FALSE,
+    submembers INTEGER[] DEFAULT '{}',
+    joinRequest INTEGER[] DEFAULT '{}'
+  );
+`);
 
     console.log("Tables initialized");
 

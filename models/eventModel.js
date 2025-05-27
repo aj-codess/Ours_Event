@@ -31,11 +31,31 @@ const create=async(payload)=>{
 }
 
 
+const createCategory=async()=>{
+    try{
+
+    } catch(error){
+        console.log("Error creating category");
+        throw error;
+    }
+}
+
+
 
 const getEvent=async()=>{
     try{
 
+        const obj=await db.client.query(
+            `SELECT * FROM events`
+        );
 
+        if(!obj){
+            return {status:false,message:"No Event Found"};
+        };
+
+        if(obj.rowCount===1){
+            return {status:true,data:obj.rows[0]};
+        };
 
     } catch(error){
         console.log("Error Getting Events in DB");
@@ -82,6 +102,17 @@ const eventSubmembers=async(eventId)=>{
 
 
 
+const eventJoinRequest=async(eventId)=>{
+    try{
+
+    } catch(error){
+        console.log("Error Getting Join Request");
+        throw error;
+    }
+}
+
+
+
 const acceptInEvent=async(eventId,userId)=>{
     try{
 
@@ -94,6 +125,19 @@ const acceptInEvent=async(eventId,userId)=>{
 
 const makeOpen=async(eventId)=>{
     try{
+
+        const obj=await db.client.query(
+            `UPDATE events SET isOpen = TRUE WHERE eventId = $1`,
+            [eventId]
+        );
+
+        if(!obj){
+            return {status:false,message:"Error Opening Event"}
+        };
+
+        if(obj.rowCount===1){
+            return {status:true,message:"Event Opened"};
+        };
 
     } catch(error){
         console.log("Error making Event Open");
@@ -126,6 +170,7 @@ const joinEvent=async(userId,eventId)=>{
 
 export default {
     create,
+    createCategory,
     getEvent,
     deleteEvents,
     eventSubmembers,
