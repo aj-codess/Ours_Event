@@ -98,6 +98,15 @@ const createCategory=async(req,res)=>{
 }
 
 
+const getEventJoinRequest=async(req,res)=>{
+    try{
+
+    } catch(error){
+
+    }
+}
+
+
 export default {
     joinEvent,
     uploadToEvent,
@@ -108,5 +117,6 @@ export default {
     getAllEvents,
     createEvent,
     getCategories,
-    createCategory
+    createCategory,
+    getEventJoinRequest
 }

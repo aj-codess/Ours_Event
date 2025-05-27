@@ -40,6 +40,26 @@ eventRouter.get("/", (req, res) => {
 
 eventRouter.post("/joinEvent",(req,res)=>{
     eventController.joinEvent(req,res);
-})
+});
+
+
+eventRouter.get("/getEventJoinRequest",(req,res)=>{
+    eventController.getEventJoinRequest(req,res);
+});
+
+
+eventRouter.get("/getEventCategories",(req,res)=>{
+    eventController.getCategories(req,res);
+});
+
+
+eventRouter.post("/createEventCategory",(req,res)=>{
+    eventController.createCategory(req,res);
+});
+
+
+eventRouter.get("/getJoinRequest",(req,res)=>{
+    eventController.getEventJoinRequest(req,res);
+});
 
 export default eventRouter;

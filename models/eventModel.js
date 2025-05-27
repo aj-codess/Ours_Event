@@ -103,7 +103,7 @@ const getEvent=async()=>{
 
 
 
-const deleteEvents=async(eventId)=>{
+const deleteEvent=async(eventId)=>{
     try{
 
         const obj=await db.client.query(
@@ -287,7 +287,7 @@ export default {
     create,
     createCategory,
     getEvent,
-    deleteEvents,
+    deleteEvent,
     eventSubmembers,
     acceptInEvent,
     makeOpen,
