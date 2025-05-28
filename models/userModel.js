@@ -98,7 +98,7 @@ const deleteAccount=async(userId,password)=>{
 const addUser=async(userId,userToAdd)=>{
     try{
 
-        const results=await db.client.query(
+        const result=await db.client.query(
             `UPDATE users SET friends = array_append(friends, $1) WHERE userId = $2`,
             [userToAdd,userId]
         );

@@ -30,7 +30,7 @@ const createUser=async(req,res)=>{
         res.cookie("authToken",token,cookieOptions);
         res.cookie("refreshToken",refreshToken,refreshCookieOptions);
 
-        return res.status(200).json({status:true,data:obj,message:"User Created Successfully"});
+        return res.status(200).json(obj);
 
     } catch(error){
         res.status(500).json({message:"Internal Server Error Creating User"});

@@ -46,10 +46,7 @@ const getAllEvents=async(req,res)=>{
 
 const deleteEvent=async(req,res)=>{
     try{
-
-        const {eventId}=req.query;
-
-        const obj=await eventModel.deleteEvent(req.user,eventId);
+        const obj=await eventModel.deleteEvent(req.user,req.query.eventId);
 
         if(!obj){
             return res.status(500).json({status:false,message:"Internal Server Error Deleting Event"});
@@ -70,9 +67,8 @@ const deleteEvent=async(req,res)=>{
 
 const getEventSubmembers=async(req,res)=>{
     try{
-        const {eventId}=req.query;
 
-        const obj=await eventModel.eventSubmembers(eventId);
+        const obj=await eventModel.eventSubmembers(req.query.eventId);
 
         if(!obj){
             return res.status(500).json({status:false,message:"Internal Server Error getting Submembers"});
@@ -94,9 +90,7 @@ const getEventSubmembers=async(req,res)=>{
 const acceptInEvent=async(req,res)=>{
     try{
 
-        const {eventId,userId}=req.query;
-
-        const obj=await eventModel.acceptInEvent(eventId,userId);
+        const obj=await eventModel.acceptInEvent(req.query.eventId,req.query.userId);
 
         if(!obj){
             return res.status(500).json({status:false,message:"Internal Server Error Accepting User In Event"})
@@ -117,9 +111,8 @@ const acceptInEvent=async(req,res)=>{
 
 const makeOpen=async(req,res)=>{
     try{
-        const eventId=req.query;
 
-        const obj=await eventModel.makeOpen(req.user,eventId);
+        const obj=await eventModel.makeOpen(req.user,req.query.eventId);
 
         if(!obj){
             return res.status(500).json({status:false,message:"Failed Opening Event"});
@@ -151,9 +144,7 @@ const uploadToEvent=async(req,res)=>{
 const joinEvent=async(req,res)=>{
     try{
 
-        const eventId=req.query;
-
-        const obj=await eventModel.joinEvent(req.user,eventId);
+        const obj=await eventModel.joinEvent(req.user,req.query.eventId);
 
         if(!obj){
             return res.status(500).json({status:false,message:"Internal Server Error Joining Event"});
@@ -218,10 +209,7 @@ const createCategory=async(req,res)=>{
 
 const getEventJoinRequest=async(req,res)=>{
     try{
-
-        const {eventId}=req.query;
-
-        const obj=await eventModel.eventJoinRequest(eventId);
+        const obj=await eventModel.eventJoinRequest(req.query.eventId);
 
         if(!obj){
             return res.status(500).json({status:false,message:"Internal Server Error Getting Joined Request"});

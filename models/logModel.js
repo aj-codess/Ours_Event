@@ -9,10 +9,10 @@ const create=async(payload)=>{
         const userId=utility.genId();
         const {email,password,name}=payload;
 
-        const hashedPassword=logServices.hashedPassword(password);
+        const hashedPassword=logServices.passHash(password);
 
          const result = await db.client.query(
-            `INSERT INTO users (name, email, password, userId) VALUES ($1, $2, $3, $4) RETURNING id, name, email`,
+            `INSERT INTO users (name, email, password, userId) VALUES ($1, $2, $3, $4) RETURNING userId, name, email`,
             [name, email, hashedPassword, userId]
         );
 

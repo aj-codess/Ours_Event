@@ -60,8 +60,8 @@ const deleteAccount=async(req,res)=>{
 
 const addUser=async(req,res)=>{
     try{
-        const {userToAdd}=req.body;
-        const obj=await userModel.addUser(req.user,userToAdd);
+        
+        const obj=await userModel.addUser(req.user,req.query.userToAdd);
 
       if(!obj){
             return res.status(500).json({status:false,message:"Error Adding User"});
@@ -82,8 +82,7 @@ const addUser=async(req,res)=>{
 const removeUser=async(req,res)=>{
     try{
 
-        const {userToRemove}=req.body;
-        const obj=await userModel.removeUser(req.user,userToRemove);
+        const obj=await userModel.removeUser(req.user,req.query.userToRemove);
 
        if(!obj){
             return res.status(500).json({status:false,message:"Error Removing User"});
