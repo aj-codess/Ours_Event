@@ -125,7 +125,11 @@ const makeOpen=async(req,res)=>{
             return res.status(500).json({status:false,message:"Failed Opening Event"});
         }
 
-        
+        if(obj.status==false){
+            return res.status(404).json(obj);
+        }
+
+        return res.status(200).json(obj);
 
     } catch(error){
         res.status(500).json({message:"Internal Server Error Opening Event"});
@@ -147,6 +151,20 @@ const uploadToEvent=async(req,res)=>{
 const joinEvent=async(req,res)=>{
     try{
 
+        const eventId=req.query;
+
+        const obj=await eventModel.joinEvent(req.user,eventId);
+
+        if(!obj){
+            return res.status(500).json({status:false,message:"Internal Server Error Joining Event"});
+        }
+
+        if(obj.status==false){
+            return res.status(404).json(obj);
+        }
+
+        return res.status(200).json(obj);
+
     } catch(error){
         res.status(500).json({message:"Internal Server Error Joining Event"});
         console.log("Error Joining Event - ",error);
@@ -157,8 +175,21 @@ const joinEvent=async(req,res)=>{
 const getCategories=async(req,res)=>{
     try{
 
+        const obj=await eventModel.getCategories();
+
+        if(!obj){
+            return res.status(500).json({status:false,message:"Internal Server Error Getting Category"});
+        }
+
+        if(obj.status==false){
+            return res.status(404).json(obj);
+        }
+
+        return res.status(200).json(obj);
+
     } catch(error){
-        
+        res.status(500).json({message:"Internal Server Error Getting Event Category"});
+        console.log("Error Getting Event Category - ",error);
     }
 }
 
@@ -166,8 +197,21 @@ const getCategories=async(req,res)=>{
 const createCategory=async(req,res)=>{
     try{
 
-    } catch(error){
+        const obj=await eventModel.createCategory(req.body);
 
+        if(!obj){
+            return res.status(500).json({status:false,message:"Internal Server Error Creating Category"});
+        }
+
+        if(obj.status==false){
+            return res.status(404).json(obj);
+        };
+
+        return res.status(200).json(obj);
+
+    } catch(error){
+        res.status(500).json({message:"Internal Server Error creating Event Category"});
+        console.log("Error creating Event Category - ",error);
     }
 }
 
@@ -175,8 +219,23 @@ const createCategory=async(req,res)=>{
 const getEventJoinRequest=async(req,res)=>{
     try{
 
-    } catch(error){
+        const {eventId}=req.query;
 
+        const obj=await eventModel.eventJoinRequest(eventId);
+
+        if(!obj){
+            return res.status(500).json({status:false,message:"Internal Server Error Getting Joined Request"});
+        }
+
+        if(obj.status==false){
+            return res.status(404).json(obj);
+        }
+
+        return res.status(200).json(obj);
+
+    } catch(error){
+        res.status(500).json({message:"Internal Server Error Getting Join Request"});
+        console.log("Error  getting Join Request - ",error);
     }
 }
 
