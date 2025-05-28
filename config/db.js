@@ -15,30 +15,30 @@ const connect = async () => {
 
 
     await client.query(`
-        CREATE TABLE IF NOT EXISTS users (
-        userId SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        friends INTEGER[] DEFAULT '{}',
-        requests INTEGER[] DEFAULT '{}'
-      );
+CREATE TABLE IF NOT EXISTS users (
+    userId TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    friends TEXT[] DEFAULT '{}',
+    requests TEXT[] DEFAULT '{}'
+);
     `);
 
 
     await client.query(`
-      CREATE TABLE IF NOT EXISTS categories (
-        category_id SERIAL PRIMARY KEY,
-        name TEXT UNIQUE NOT NULL
-      );
+CREATE TABLE IF NOT EXISTS categories (
+    category_id TEXT PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL
+);
     `);
 
 
 await client.query(`
-  CREATE TABLE IF NOT EXISTS events (
-    ownerId SERIAL PRIMARY KEY,
-    eventId SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS events (
+    eventId TEXT PRIMARY KEY,
+    ownerId TEXT REFERENCES users(userId) ON DELETE CASCADE,
     title TEXT NOT NULL,
     description TEXT,
     locationName TEXT NOT NULL,
@@ -46,16 +46,17 @@ await client.query(`
     longitude DOUBLE PRECISION NOT NULL,
     startTime TIMESTAMP NOT NULL,
     endTime TIMESTAMP NOT NULL,
-    category_id INTEGER REFERENCES categories(category_id) ON DELETE SET NULL,
+    category_id TEXT REFERENCES categories(category_id) ON DELETE SET NULL,
     isOpen BOOLEAN DEFAULT FALSE,
-    submembers INTEGER[] DEFAULT '{}',
-    joinRequest INTEGER[] DEFAULT '{}'
-  );
+    submembers TEXT[] DEFAULT '{}',
+    joinRequest TEXT[] DEFAULT '{}'
+);
 `);
 
     console.log("Tables initialized");
 
     client.on('error', (error) => {
+
       console.log("Error Occurred In the db - ", error);
       process.exit(1);
     });
@@ -69,6 +70,7 @@ await client.query(`
     });
 
   } catch (error) {
+    await client.query('ROLLBACK');
     console.log("Error Connecting to db - ", error);
     process.exit(1);
   }

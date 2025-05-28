@@ -18,11 +18,14 @@ import searchSocketModel from "./socketHandlers/searchSocketModel.js";
 import userSearchSocketModel from "./socketHandlers/userSearchSocketModel.js";
 
 const app = express();
-logServices.writePrivatePublic();
-logServices.loadPersistentKeys();
+
 dotenv.config();
+
 db.connect();
 connectDB();
+
+logServices.writePrivatePublic();
+logServices.loadPersistentKeys();
 
 const PORT = process.env.PORT || 3000;
 
