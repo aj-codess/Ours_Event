@@ -12,6 +12,7 @@ const getUserProfile=async(userId)=>{
         return result.rows[0];
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error Getting User From DB - ",error);
         throw error;
     }
@@ -37,6 +38,7 @@ const updateUser = async (userId, payload) => {
     }
 
   } catch (error) {
+    await db.client.query('ROLLBACK');
     console.log("Error Updating user - ", error);
     throw error;
   }
@@ -75,6 +77,7 @@ const deleteAccount=async(userId,password)=>{
         };
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error Deleting user - ", error);
         throw error;
     }
@@ -97,6 +100,7 @@ const addUser=async(userId,userToAdd)=>{
         };
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error adding user to friends - ", error);
         throw error;
     }
@@ -118,6 +122,7 @@ const removeUser=async(userId,userToRemove)=>{
         }
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error Removing User - ",error);
         throw error;
     }
@@ -139,6 +144,7 @@ const getFriendsNRequests=async(userId)=>{
         return result.rows[0];
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error Getting Friends and Requests");
         throw error;
     }

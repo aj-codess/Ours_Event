@@ -37,6 +37,7 @@ const connect = async () => {
 
 await client.query(`
   CREATE TABLE IF NOT EXISTS events (
+    ownerId SERIAL PRIMARY KEY,
     eventId SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT,

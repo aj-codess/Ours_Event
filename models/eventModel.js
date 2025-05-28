@@ -1,7 +1,7 @@
 import db from "./../config/db.js";
 import utility from "./../services/utility.js";
 
-const create=async(payload)=>{
+const create=async(id,payload)=>{
     try{
 
         const eventId=utility.genId();
@@ -9,9 +9,9 @@ const create=async(payload)=>{
         const {title,description,locationName,latitude,longitude,startTime,endTime,category_id}=payload;
         
         const result=await db.client.query(
-            `INSERT INTO events (title, description, locationName, latitude, longitude, startTime, endTime, category_id, eventId)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-            [title, description, locationName, latitude, longitude, startTime, endTime, category_id, eventId]
+            `INSERT INTO events (title, description, locationName, latitude, longitude, startTime, endTime, category_id, eventId, ownerId)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+            [title, description, locationName, latitude, longitude, startTime, endTime, category_id, eventId, id]
         );
 
         if(!result){
@@ -23,6 +23,7 @@ const create=async(payload)=>{
         };
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error creating Event in DB");
         throw error;
     }
@@ -51,6 +52,7 @@ const createCategory=async(payload)=>{
         };
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error creating category");
         throw error;
     }
@@ -73,6 +75,7 @@ const getCategories=async()=>{
         };
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error Getting Categories");
         throw error;
     }
@@ -96,6 +99,7 @@ const getEvent=async()=>{
         };
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error Getting Events in DB");
         throw error;
     }
@@ -103,11 +107,13 @@ const getEvent=async()=>{
 
 
 
-const deleteEvent=async(eventId)=>{
+const deleteEvent=async(userId,eventId)=>{
     try{
 
+        await db.client.query('BEGIN');
+
         const obj=await db.client.query(
-            `DELETE FROM events WHERE eventId = $1`,
+            `SELECT ownerId FROM events WHERE eventId = $1`,
             [eventId]
         );
 
@@ -116,10 +122,20 @@ const deleteEvent=async(eventId)=>{
         };
 
         if(obj.rowCount===1){
-            return {status:true,data:obj.rows[0]};
-        }
+            if(userId==obj.rows[0].ownerId){
+                await db.client.query(
+                    `DELETE FROM events WHERE eventId= $1`,
+                    [eventId]
+                );
+            }
+        };
+
+        await db.client.query('COMMIT');
+
+        return {status:true,message:"Event Deleted Successfully"};
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error Deleting Event");
         throw error;
     }
@@ -144,6 +160,7 @@ const eventSubmembers=async(eventId)=>{
         }
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error Getting Event Sub-members");
         throw error;
     }
@@ -168,6 +185,7 @@ const eventJoinRequest=async(eventId)=>{
         };
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error Getting Join Request");
         throw error;
     }
@@ -205,23 +223,31 @@ const acceptInEvent = async (eventId, userId) => {
 };
 
 
-const makeOpen=async(eventId)=>{
+const makeOpen=async(userId,eventId)=>{
     try{
 
-        const obj=await db.client.query(
-            `UPDATE events SET isOpen = TRUE WHERE eventId = $1`,
+        await db.client.query('BEGIN');
+
+        const checks=await db.client.query(
+            `SELECT ownerId FROM events WHERE eventId=$1`,
             [eventId]
         );
 
-        if(!obj){
-            return {status:false,message:"Error Opening Event"}
-        };
+        if(userId==checks.rows[0].ownerId){
+            await db.client.query(
+                `UPDATE events SET isOpen = TRUE WHERE eventId = $1`,
+                [eventId]
+            );
 
-        if(obj.rowCount===1){
-            return {status:true,message:"Event Opened"};
-        };
+            await db.client.query('COMMIT');
+        } else{
+            return {status:false,message:"User Not An Admin"};
+        }
+
+        return {status:true,message:"Event Made Open"};
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error making Event Open");
         throw error;
     }
@@ -232,6 +258,7 @@ const upload=async(payload)=>{
     try{
 
     } catch(error){
+        await db.client.query('ROLLBACK');
         console.log("Error uploading to Event");
         throw error;
     }
