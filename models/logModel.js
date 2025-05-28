@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import db from "./../config/db.js";
 import utility from "./../services/utility.js";
 import logServices from "./../services/logServices.js";
+import Connection from "./../models/connectionSchema.js";
 
 const create=async(payload)=>{
     try{
@@ -15,7 +16,15 @@ const create=async(payload)=>{
             [name, email, hashedPassword, userId]
         );
 
-        return result.rows[0];
+        const newConnection=new Connection(
+            {
+                userId:userId
+            }
+        );
+
+        await newConnection.save();
+
+        return {status:true,data:result.rows[0]};
 
     } catch(error){
         console.log("database Error in Creating a User - ",error);

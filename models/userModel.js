@@ -9,7 +9,15 @@ const getUserProfile=async(userId)=>{
             [userId]
         );
 
-        return result.rows[0];
+        if(!result){
+            return {status:false,message:"Error Getting User Profile. Try Again In a Bit"};
+        }
+
+        if(result.rowCount===1){
+            return {status:true,data:result.rows[0]};
+        }
+
+        return {status:false,message:"User Not Found"};
 
     } catch(error){
         await db.client.query('ROLLBACK');
@@ -34,7 +42,9 @@ const updateUser = async (userId, payload) => {
     );
 
     if(result.rowCount===1){
-        return result.rows[0];
+        return {status:true,data:result.rows[0]};
+    } else{
+        return { status:false,message:"Error Updating User. Try Again in a bit"};
     }
 
   } catch (error) {
@@ -99,6 +109,8 @@ const addUser=async(userId,userToAdd)=>{
             return {status:false,message:"User not Added"};
         };
 
+        return {status:false,message:"Error Adding User. Try Again In a Bit"};
+
     } catch(error){
         await db.client.query('ROLLBACK');
         console.log("Error adding user to friends - ", error);
@@ -121,6 +133,8 @@ const removeUser=async(userId,userToRemove)=>{
             return {status:false,message:"User Not Removed"};
         }
 
+            return {status:false,message:"Error Removing User. Try Again in a bit"};
+
     } catch(error){
         await db.client.query('ROLLBACK');
         console.log("Error Removing User - ",error);
@@ -137,11 +151,15 @@ const getFriendsNRequests=async(userId)=>{
             [userId]
         );
 
-        if (result.rowCount === 0) {
-            return res.status(404).json({status:false,message:"User Not Found"});
-        };
+        if(!result){
+            return {status:false,message:"Server Error Getting list"}
+        }
 
-        return result.rows[0];
+        if(result.rowCount===1){
+            return {status:false,data:result.rows[0]};
+        }
+
+        return {status:true,message:"No Users Found"};
 
     } catch(error){
         await db.client.query('ROLLBACK');

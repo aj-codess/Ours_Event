@@ -9,17 +9,17 @@ const connectionSchema = new mongoose.Schema({
   },
   socket_id: {
     type: String,
-    required: true,
+    required: false,
     trim: true
   },
   ip: {
     type: String,
-    required: true,
+    required: false,
     trim: true
   },
   port: {
     type: Number,
-    required: true
+    required: false
   },
   connected_at: {
     type: Date,
