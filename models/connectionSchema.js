@@ -7,11 +7,6 @@ const connectionSchema = new mongoose.Schema({
     unique: true,
     trim: true
   },
-  socket_id: {
-    type: String,
-    required: false,
-    trim: true
-  },
   ip: {
     type: String,
     required: false,
